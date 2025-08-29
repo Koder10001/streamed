@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tauri App</title>
+  </head>
+
+  <body>
+    <main class="container">
+
+<!-- <iframe 
+  id="stream-player" 
+  width="640" 
+  height="360" 
+  frameborder="0" 
+  allowfullscreen
+  src="https://embedsports.top/embed/alpha/new-zealand-warriors-vs-parramatta-eels/1"
+  >
+</iframe> -->
+      
+<iframe width="1307" height="735" src="https://www.youtube.com/embed/lUD_RJSeuzQ" title="A Sanctuary Before the Flames | Minecraft Homestead Modpack [ EP.6 ]" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+      <div id="screen">
+
+      </div>
+
+      <div id="add">
+
+      </div>
+
+    </main>
+    <div id="streamPopup">
+      <!-- this is in Popup module -->
+       
+      <!-- <div class="selectRow">  
+
+        <select id="sport" onchange="fetchSport()">
+          <option value="all">All Sport</option>
+        </select>
+
+      </div>
+
+      <div id="sports">
+        
+      </div> -->
+      
+    </div>
+
+    <script type="module" src="./event.js" defer></script>
+    <script type="module" src="./main.js" defer></script>
+    <script src="https://embedsports.top/sw.js"></script>
+  </body>
+</html>
