@@ -1,5 +1,3 @@
-import Popup from "./Popup.js";
-
 const {fetch} = window.__TAURI__.http;
 
 class APIHandler{
@@ -39,14 +37,14 @@ class APIHandler{
         this.#currentHostIndex = ( this.#currentHostIndex + 1 ) % this.#hosts.length;
     }
     
-    async getAllSport(){ // fix this
+    async getAllSport(){ 
         let response = await this.#req(this.#hosts[this.#currentHostIndex] + "/api/sports");
         return response;
         
     }
 
     async getSportSpecificMatches(sportID){ 
-        let response = await this.#req(this.#hosts[this.#currentHostIndex] + "/api/matches/" + sportID + "/popular");
+        let response = await this.#req(this.#hosts[this.#currentHostIndex] + "/api/matches/" + sportID);
         return response;
     }
 

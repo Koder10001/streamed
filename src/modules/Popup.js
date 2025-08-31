@@ -14,28 +14,27 @@ class Popup{
         this.#screenNo = screenNo;
         // reset popup
         this.#popupDOM = document.getElementById("streamPopup");
+        this.#popupDOM.setAttribute("forScreen",screenNo);
         
     }
 
 
     async init(){
-        this.#popupDOM.classList.add("ontop");
-
 
         this.#sportObj = await this.#api.getAllSport();
 
 
         let template = `
-        <div class="selectRow">
+        <div tabindex="-1" class="selectRow">
 
-            <select id="sport" onchange="fetchSport()">
-                <option value="all">All Sport</option>
+            <select tabindex="-1" id="sport" class="focusable" onchange="fetchSport(this.value)">
+                <option tabindex="-1" value="all">All Sport</option>
                 ${await this.listSportsType()}
             </select>
 
         </div>
-        <div id="sports">
-            ${await this.listFavSports()}
+        <div tabindex="-1" id="sports">
+            ${await this.listSports()}
         </div>`
         this.#popupDOM.innerHTML = template;
     }
@@ -45,52 +44,64 @@ class Popup{
 
         for(let sport of this.#sportObj){
 
-            optionDOMs += `<option value="${sport.id}">${sport.name}</option>\n`;
+            optionDOMs += `<option tabindex="-1" value="${sport.id}">${sport.name}</option>\n`;
 
         }
         return optionDOMs;
     }
 
-    async listFavSports(){
+    async listSports(endpoint = undefined){
         let matchList = "";
+
+        if(endpoint == undefined){
+            endpoint = this.#api.getSportSpecificMatches;
+        }
+
         for(let sport of this.#sportObj){
             if(this.#favorites.indexOf(sport.id) != -1){
 
-                let matches = await this.#api.getSportSpecificMatches(sport.id);
+                let matches = await endpoint.bind(this.#api)(sport.id);
 
                 let matchCard = "";
 
                 for( let match of matches){
 
-                    let teamVSteam = match.title.split(" vs ");
+                    let teamVSteam = match.title.split(/ vs | - /);
+
+                    let secondTeam = "";
+
+                    if (teamVSteam.length > 1){
+                        secondTeam = `
+                        <span tabindex="-1" class="vs">--------</span>
+                        <span tabindex="-1">${teamVSteam[1]}</span>`;
+                    }
 
                     let banner = "";
                     
 
                     if(match.poster){
 
-                        banner += `<img src=${this.#api.host+match.poster}/>`;
+                        banner += `<img tabindex="-1" src=${this.#api.host+match.poster}/>`;
 
                     }
 
                     banner += `
-                        <div class="title">
-                            <span>${teamVSteam[0]}</span>
-                            <span>VS</span>
-                            <span>${teamVSteam[1]}</span>
+                        <div tabindex="-1" class="title">
+                            <span tabindex="-1">${teamVSteam[0]}</span>
+                            ${secondTeam}
                         </div>`
 
                     matchCard += `
-                        <div class="match" onclick='setScreen(${JSON.stringify(match.sources)},${this.#screenNo})'>
+                        <div tabindex="-1" class="match" class="focusable" onclick='setScreen(${JSON.stringify(match.sources)})'>
                             ${banner}
                         </div>`
                     
                 }
                 
                 let streamRow = `
-                    <div class="streamRow">
-                        <div class="sportType">${sport.name}</div>
-                        <div class="streamList">
+                    <div tabindex="-1" class="streamRow">
+                        <div tabindex="-1" class="sportType">${sport.name}</div>
+                        <div tabindex="-1" class="streamList">
                             ${matchCard}
                         </div>
                     </div>`
@@ -101,9 +112,16 @@ class Popup{
         return matchList;
     }
 
-    static removePopup(){
-        document.getElementById("streamPopup").classList.remove("ontop");
+    show(){
+        
+        this.#popupDOM.classList.add("ontop");
+
     }
+
+    hide(){
+        this.#popupDOM.classList.remove("ontop");
+    }
+
 
 
 }

@@ -7,31 +7,21 @@
     <title>Tauri App</title>
   </head>
 
-  <body>
-    <main class="container">
+  <body tabindex="-1">
+    <div tabindex="-1" id="container">
 
-<!-- <iframe 
-  id="stream-player" 
-  width="640" 
-  height="360" 
-  frameborder="0" 
-  allowfullscreen
-  src="https://embedsports.top/embed/alpha/new-zealand-warriors-vs-parramatta-eels/1"
-  >
-</iframe> -->
-      
-<iframe width="1307" height="735" src="https://www.youtube.com/embed/lUD_RJSeuzQ" title="A Sanctuary Before the Flames | Minecraft Homestead Modpack [ EP.6 ]" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-      <div id="screen">
-
+      <div tabindex="-1" id="screen">
+        
+        <!-- content will be add in Screen module -->
       </div>
 
-      <div id="add">
-
+      <div tabindex="-1" id="add" onclick="newScreen()" class="show focusable" >
+        <span tabindex="-1">+</span>
       </div>
 
-    </main>
-    <div id="streamPopup">
+    </div>
+    <div tabindex="-1" id="streamPopup">
+
       <!-- this is in Popup module -->
        
       <!-- <div class="selectRow">  
@@ -39,6 +29,7 @@
         <select id="sport" onchange="fetchSport()">
           <option value="all">All Sport</option>
         </select>
+
 
       </div>
 
@@ -50,6 +41,5 @@
 
     <script type="module" src="./event.js" defer></script>
     <script type="module" src="./main.js" defer></script>
-    <script src="https://embedsports.top/sw.js"></script>
   </body>
 </html>

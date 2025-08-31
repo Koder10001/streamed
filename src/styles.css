@@ -3,15 +3,44 @@ body {
     margin: 0;
     position: relative;
     overflow: hidden;
+    
 }
-.container {
+#container {
     margin: 0;
     padding: 0;
     width: 100vw;
     height: 100vh;
     background-color: black;
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row;
+}
+
+#screen {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+}
+
+#add {
+    flex: 1;
+    max-width: 0px;
+    color: white;
+    font-weight: bold;
+    font-size: 100px;
+    display:flex;
+    flex-flow: column;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#add > span {
+    flex: 1;
+    text-align: center;
+    max-height: 100px;
+}
+
+.show {
+    max-width: 100px !important;
 }
 
 .row {
@@ -21,7 +50,8 @@ body {
 
 .embed {
     flex: 1;
-    min-width: 50vw;
+    min-width: 50%;
+    height: 100%;
 }
 
 
@@ -37,6 +67,7 @@ body {
     display: flex;
     flex-flow: row wrap;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 20px;
     border-radius: 30px;
     outline: 12px solid #de721e;
@@ -58,7 +89,7 @@ select {
 }
 
 option {
-    font-size: 20px;
+    font-size: 50px;
 }
 
 .selectRow {
@@ -67,6 +98,10 @@ option {
     flex:1;
     display: flex;
     flex-flow: row;
+}
+
+#sports {
+    width: 100%;
 }
 
 .sportType {
@@ -121,10 +156,23 @@ option {
     /* text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; */
 }
 
-.match:hover {
+.vs {
+    color: white;
+    /* text-decoration-line: underline; */
+}
+
+.match.focused {
     box-shadow: none;
     margin-top: 30px;
     margin-left: 30px;
     transition: all 0.2s;
-    outline: 5px solid white;
+    border: 5px solid white;
+    box-sizing: border-box;
+}
+
+.focused{
+    box-shadow: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    border: 5px solid white;
 }

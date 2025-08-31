@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "streamedpk",
+  "productName": "Streamed",
   "version": "0.1.0",
   "identifier": "com.kod.streamedpk",
   "build": {
@@ -11,12 +11,13 @@
     "windows": [
       {
         "title": "streamedpk",
-        "width": 800,
-        "height": 600
+        "width": 1920,
+        "height": 1080
       }
     ],
     "security": {
-      "csp": "default-src *; frame-src *;script-src *;connect-src *; sandbox allow-downloads allow-presentation allow-scripts;"
+      "csp": "default-src http://tauri.localhost/ 'self' 'unsafe-hashes' 'unsafe-inline' https://streami.su/ https://streamed.pk/ https://streamed.st/; connect-src: ipc: http://ipc.localhost/ ; frame-src https://embedsports.top/;",
+      "dangerousDisableAssetCspModification": true
     }
   },
   "bundle": {

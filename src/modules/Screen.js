@@ -13,7 +13,12 @@ class Screen{
         this.#container = document.getElementById("screen");
         this.#Popup = new Popup(this.#screenDOMs.length)
         this.#Popup.init();
+        this.#Popup.show();
 
+    }
+
+    get length(){
+        return this.#screenDOMs.length;
     }
 
     async newScreen(sourceObj, screenNo){ // always have 1 screened up already
@@ -30,36 +35,37 @@ class Screen{
             this.#screenDOMs[screenNo].classList.add("embed");
             // this.#screenDOMs[screenNo].setAttribute("allowfullscreen", true);
             this.#screenDOMs[screenNo].setAttribute("frameborder", 0);
-
+            this.#screenDOMs[screenNo].setAttribute("screenNo",screenNo);
+            this.#screenDOMs[screenNo].setAttribute("tabindex",-1);
         }
 
 
         let embed = await this.#getEmbed(sourceObj, isHD);
         
-        console.log(embed);
 
         this.#screenDOMs[screenNo].src = embed.embedUrl;
 
 
         if(this.#screenDOMs.length % 2 != 0 || 
-        screen.width < screen.height){ // length >= 1
-            
+        screen.width < screen.height){ // length = 1 or 3 new row
+             
             
             
             let row = document.createElement("div");
             row.classList.add("row");
+            row.setAttribute("tabindex",-1);
             row.append(this.#screenDOMs[screenNo]);
 
+            this.#rowDOMs.push(row);
             
             this.#container.append(row)
             // create new row div and add embed to row
             
 
         }
-        else {
+        else { 
 
-
-
+            this.#rowDOMs[Math.floor(screenNo/2)].append(this.#screenDOMs[screenNo]);
             // append embed to row div
 
         }

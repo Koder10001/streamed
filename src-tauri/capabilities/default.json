@@ -6,7 +6,7 @@
     "main"
   ],
   "remote": {
-    "urls": ["https://*", "http://*"]
+    "urls": ["tauri://*","http://tauri.localhost/*","https://streami.su/", "https://streamed.pk/", "https://streamed.st/", "https://embedsports.top/"]
   },
   "permissions": [
     "core:default",
@@ -15,13 +15,22 @@
       "identifier": "http:default",
       "allow": [
         {
-          "url": "http://*"
+          "url": "tauri://*"
         },
         {
-          "url": "https://*"
+          "url": "http://tauri.localhost/"
+        },
+        {
+          "url": "https://streami.su/"
+        },
+        {
+          "url": "https://streamed.pk/"
+        },
+        {
+          "url": "https://streamed.st/"
         }
+
       ]
-    },
-    "http:default"
+    }
   ]
 }
