@@ -8,27 +8,26 @@ class Controller{
 
         this.isInPopup = true;
 
-        document.body.onkeyup = (ev)=>{
+        document.onkeydown = (ev)=>{
             ev.preventDefault();
-            switch (ev.code){
-                case "ArrowLeft":
+            switch (ev.keyCode){
+                case 37:
                     this.left();
                 break;
-                case "ArrowRight":
+                case 39:
                     this.right();
                 break;
-                case "ArrowUp":
+                case 38:
                     this.up();
                 break;
-                case "ArrowDown":
+                case 40:
                     this.down();
                 break;
-                case "Enter":
-                case "MailReply":
+                case 13:
                     this.enter();
                 break;
                 default:
-                    alert(ev.code, ev.key, ev.keyCode, ev.which);
+                    // alert(ev.keyCode);
                 break;
             }
         };
@@ -92,8 +91,6 @@ class Controller{
         let focused = this.#findFocused();
 
         let target;
-        
-        let index = 0;
 
         let embedArr = document.querySelectorAll(".embed");
 
@@ -258,28 +255,13 @@ class Controller{
     }
 
     #removeFocus(DOM){
-        DOM.classList.remove("focused");
         DOM.classList.add("focusable");
+        DOM.classList.remove("focused");
     }
 
     #addFocus(DOM){
-        DOM.classList.remove("focusable");
         DOM.classList.add("focused");
-    }
-
-    click(x, y,DOM)
-    {
-        var ev = new MouseEvent('click', {
-            'view': window,
-            'bubbles': true,
-            'cancelable': true,
-            'screenX': x,
-            'screenY': y
-        });
-
-        var el = DOM.elementFromPoint(x, y);
-        console.log(el); //print element to console
-        el.dispatchEvent(ev);
+        DOM.classList.remove("focusable");
     }
 
 }

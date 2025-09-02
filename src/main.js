@@ -14,11 +14,6 @@ window.onload = async ()=> {
 
     window.screenObj = screen
     window.controller = controller;
-    window.location = {};
-    document.location = {};
-    window.history = {};
-    self.location = {};
-    top.location = {};
 };
 
 window.onbeforeunload = (ev)=>{

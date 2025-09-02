@@ -16,7 +16,7 @@
       }
     ],
     "security": {
-      "csp": "default-src http://tauri.localhost/ 'self' 'unsafe-hashes' 'unsafe-inline' https://streami.su/ https://streamed.pk/ https://streamed.st/; connect-src: ipc: http://ipc.localhost/ ; frame-src https://embedsports.top/;",
+      "csp": "default-src http://tauri.localhost/ 'self' 'unsafe-hashes' 'unsafe-inline' https://streami.su/ https://streamed.pk/ https://streamed.st/; connect-src: ipc: http://ipc.localhost/ ; frame-src https://embedsports.top/; webkit-pdfjs-viewer://pdfjs",
       "dangerousDisableAssetCspModification": true
     }
   },

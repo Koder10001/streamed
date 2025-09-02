@@ -6,7 +6,7 @@
     "main"
   ],
   "remote": {
-    "urls": ["tauri://*","http://tauri.localhost/*","https://streami.su/", "https://streamed.pk/", "https://streamed.st/", "https://embedsports.top/"]
+    "urls": ["tauri://*","http://tauri.localhost/*","https://streami.su/", "https://streamed.pk/", "https://streamed.st/", "https://embedsports.top/", "webkit-pdfjs-viewer://*"]
   },
   "permissions": [
     "core:default",

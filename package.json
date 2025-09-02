@@ -2,7 +2,7 @@
   "name": "streamedpk",
   "version": "0.1.0",
   "devDependencies": {
-    "@tauri-apps/cli": "^2"
+    "@tauri-apps/cli": "^2.8.3"
   },
   "private": true,
   "scripts": {

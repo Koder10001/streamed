@@ -161,6 +161,15 @@ option {
     /* text-decoration-line: underline; */
 }
 
+
+
+.focused{
+    box-shadow: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    border: 5px solid white;
+}
+
 .match.focused {
     box-shadow: none;
     margin-top: 30px;
@@ -170,9 +179,7 @@ option {
     box-sizing: border-box;
 }
 
-.focused{
-    box-shadow: none;
-    transition: all 0.2s;
-    box-sizing: border-box;
-    border: 5px solid white;
+
+#sport.focused {
+    border: 5px solid #de721e;
 }
