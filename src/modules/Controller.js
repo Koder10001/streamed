@@ -4,32 +4,58 @@ class Controller{
 
     #screenFocusIndex = 0;
 
+    #lastClickTime = Date.now();
+    #lastBtnStreak = 0;
+
+
+
     constructor(){
 
         this.isInPopup = true;
 
-        document.onkeydown = (ev)=>{
+        window.onkeydown = (ev)=>{
             ev.preventDefault();
+
             switch (ev.keyCode){
                 case 37:
+                    this.#lastBtnStreak = 0;
                     this.left();
                 break;
                 case 39:
+                    this.#lastBtnStreak = 0;
                     this.right();
                 break;
                 case 38:
+                    this.#lastBtnStreak = 0;
                     this.up();
                 break;
                 case 40:
+                    this.#lastBtnStreak = 0;
                     this.down();
                 break;
                 case 13:
-                    this.enter();
+
+                
+                    let timeNow = Date.now();
+                    this.#lastBtnStreak += 1;
+
+                    if(this.#lastBtnStreak == 1){
+                        setTimeout(this.#waitForNextInput.bind(this),500);
+                    }
+                    else if (timeNow - this.#lastClickTime > 600) {
+                        this.#lastBtnStreak = 1;
+                        setTimeout(this.#waitForNextInput.bind(this),500);
+                    }
+
+                    this.#lastClickTime = timeNow;
+
+
                 break;
                 default:
                     // alert(ev.keyCode);
                 break;
             }
+
         };
 
     }
@@ -73,16 +99,21 @@ class Controller{
         this.#screenNavigation("down")
 
     }
-    enter(){
+    enter(isDoubleClick = false, isHold = false){
+
+        // for select tag
 
         let focused = this.#findFocused();
-        focused.click();
-        
-        // if(focused.classList.contains("embed")){
-            
-        //     // alert($(".focused").contents().find(".clickable:first"));
-
-        // }
+        if(!isDoubleClick && !isHold){
+            focused.click();
+        }
+        else if(isDoubleClick){
+            let ev = new Event("dblclick");
+            focused.dispatchEvent(ev);
+        }
+        else {
+            deleteScreen(this.#findFocused());
+        }
 
     }
 
@@ -109,44 +140,44 @@ class Controller{
             }
         }
         else if(direction == "up"){
-            let prevParent = focused.parentElement.previousElementSibling;
 
-            if(prevParent){
+            let currentFocus = this.#findFocused();
 
-                let embeds = prevParent.querySelectorAll(".embed");
-                let index = 0;
-                if(embeds.length - 1 >= focused.getAttribute("screenNo") % 2){
-                    index = focused.getAttribute("screenNo") % 2
+            let embeds = document.querySelectorAll(".embed");
+
+            let index = Array.prototype.indexOf.call(embeds, currentFocus) % document.querySelectorAll(".row").length;
+
+            if ( currentFocus.parentElement.previousElementSibling ){
+
+                if(index > currentFocus.parentElement.previousElementSibling.children.length - 1){
+                    index = currentFocus.parentElement.previousElementSibling.children.length - 1;
                 }
-                else {
-                    index = embeds.length-1;
-                }
-                target = embeds[index];
+
+                this.#removeFocus(currentFocus);
+                this.#addFocus(currentFocus.parentElement.previousElementSibling.children[index])
 
             }
-            else {
-                target = focused;
-            }
+            
         }
         else if(direction == "down"){
-            let nextParent = focused.parentElement.nextElementSibling;
 
-            if(nextParent){
+            let currentFocus = this.#findFocused();
 
-                let embeds = nextParent.querySelectorAll(".embed");
-                let index = 0;
-                if(embeds.length -1 >= focused.getAttribute("screenNo") % 2){
-                    index = focused.getAttribute("screenNo") % 2;
+            let embeds = document.querySelectorAll(".embed");
+
+            let index = Array.prototype.indexOf.call(embeds, currentFocus) % document.querySelectorAll(".row").length;
+
+            if ( currentFocus.parentElement.nextElementSibling ){
+
+                if(index > currentFocus.parentElement.nextElementSibling.children.length - 1){
+                    index = currentFocus.parentElement.nextElementSibling.children.length - 1;
                 }
-                else {
-                    index = embeds.length - 1
-                }
 
-                target = embeds[index];
+                this.#removeFocus(currentFocus);
+                this.#addFocus(currentFocus.parentElement.nextElementSibling.children[index])
+
             }
-            else {
-                target = focused;
-            }
+
         }
 
         this.#removeFocus(focused);
@@ -262,6 +293,30 @@ class Controller{
     #addFocus(DOM){
         DOM.classList.add("focused");
         DOM.classList.remove("focusable");
+        if(DOM.classList.contains("embed")){
+            DOM.blur();
+        }
+    }
+
+    updateFocus(DOM){
+        this.#removeFocus(this.#findFocused());
+        this.#addFocus(DOM);
+    }
+
+    #waitForNextInput(){
+        switch(this.#lastBtnStreak){
+            case 1:
+                this.enter();
+                this.#lastBtnStreak = 1;
+                break;
+            case 2:
+                this.enter(true, false);
+                this.#lastBtnStreak = 1;
+                break;
+            default:
+                this.enter(false,true);
+                break;
+        }
     }
 
 }

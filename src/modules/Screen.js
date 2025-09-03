@@ -3,75 +3,125 @@ import Popup from "./Popup.js";
 
 class Screen{
     
-    #rowDOMs = [];
-    #screenDOMs = [];
     #container;
     #Popup;
 
     constructor(){
 
+        let screenDOMs = document.querySelectorAll(".embed");
         this.#container = document.getElementById("screen");
-        this.#Popup = new Popup(this.#screenDOMs.length)
+        this.#Popup = new Popup(screenDOMs.length)
         this.#Popup.init();
         this.#Popup.show();
+
 
     }
 
     get length(){
-        return this.#screenDOMs.length;
+        let screenDOMs = document.querySelectorAll(".embed");
+        return screenDOMs.length;
     }
 
-    async newScreen(sourceObj, screenNo){ // always have 1 screened up already
+    async newScreen(sourceObj){ // always have 1 screened up already
         
+        let screenDOMs = document.querySelectorAll(".embed");
+        
+
         let isHD = false;
 
-        if(this.#screenDOMs.length == 0){
+        if(screenDOMs.length == 0){
             isHD = true;
         }
 
-        if (this.#screenDOMs.length <= screenNo){
-
-            this.#screenDOMs.push(document.createElement("iframe"));
-            this.#screenDOMs[screenNo].classList.add("embed");
-            // this.#screenDOMs[screenNo].setAttribute("allowfullscreen", true);
-            this.#screenDOMs[screenNo].setAttribute("frameborder", 0);
-            this.#screenDOMs[screenNo].setAttribute("screenNo",screenNo);
-            this.#screenDOMs[screenNo].setAttribute("tabindex",-1);
-        }
-
+        
 
         let embed = await this.#getEmbed(sourceObj, isHD);
         
+        let iframe = document.createElement("iframe");
+        iframe.classList.add("embed");
+        iframe.setAttribute("frameborder", 0);
+        iframe.setAttribute("tabindex",-1);
+        iframe.setAttribute("onfocus", "iframeFocused()");
+        iframe.setAttribute("onmouseover","mouseOver(this)");
+        iframe.setAttribute("ondblclick", "editScreen(this)")
+        iframe.src = embed.embedUrl;
 
-        this.#screenDOMs[screenNo].src = embed.embedUrl;
 
-
-        if(this.#screenDOMs.length % 2 != 0 || 
-        screen.width < screen.height){ // length = 1 or 3 new row
-             
-            
-            
-            let row = document.createElement("div");
-            row.classList.add("row");
-            row.setAttribute("tabindex",-1);
-            row.append(this.#screenDOMs[screenNo]);
-
-            this.#rowDOMs.push(row);
-            
-            this.#container.append(row)
-            // create new row div and add embed to row
-            
-
-        }
-        else { 
-
-            this.#rowDOMs[Math.floor(screenNo/2)].append(this.#screenDOMs[screenNo]);
-            // append embed to row div
-
-        }
-
+        this.findBestPlace(iframe);
 
     }
+
+    reArrange(){
+        let rows = document.querySelectorAll(".row");
+        let embeds = document.querySelectorAll(".embed");
+        for(let row of rows ){
+            row.remove();
+        }
+
+        for(let embed of embeds){
+            this.findBestPlace(embed);
+        }   
+
+    }
+
+    findBestPlace(iframe){
+
+        let rowDOMs = document.querySelectorAll(".row")
+
+        if(rowDOMs.length == 0){
+            let row = document.createElement("div");
+            row.classList.add("row");
+            row.setAttribute("tabindex", -1);
+            this.#container.appendChild(row);
+            rowDOMs = document.querySelectorAll(".row");
+
+        }
+
+        let lastRow = rowDOMs[0];
+
+        let isEqualRows = true;
+
+        for(let row of rowDOMs){
+            if( lastRow.children.length > row.children.length ){
+                lastRow = row;
+                isEqualRows = false;
+            }
+        }
+
+        if(!isEqualRows){
+            lastRow.appendChild(iframe);
+            return; 
+        }
+        else {
+
+            let width = document.body.clientWidth;
+            let height = document.body.clientHeight;
+            let rows = document.querySelectorAll(".row").length;
+            let columns = document.querySelectorAll(".embed").length / rows;
+
+            let newScreenWidth = ( width / ( columns + 1 ) ) ;
+            let newScreenHeight =  ( height / ( rows + 1 ) );
+            
+            let newAreaBasedOnWidth =  newScreenWidth * newScreenWidth * 9/16;
+            let newAreaBasedOnHeight = newScreenHeight * newScreenHeight * 16/9;
+
+            console.log(newAreaBasedOnHeight, newAreaBasedOnWidth)
+
+            if(newAreaBasedOnWidth >= newAreaBasedOnHeight){
+                rowDOMs[0].appendChild(iframe);
+            }
+            else {
+                let row = document.createElement("div");
+                row.classList.add("row");
+                row.setAttribute("tabindex", -1);
+                row.appendChild(iframe);
+                this.#container.appendChild(row);
+
+            }
+        }
+    }
+
+    
 
     async #getEmbed(sourceObj, isHD = false){
         let api = new APIHandler();
@@ -87,7 +137,7 @@ class Screen{
 
         for(let url of servers){
 
-            if(url.hd == isHD && url.viewers < embed.viewers){
+            if(url.hd == isHD && url.viewers > embed.viewers){
 
                 embed = structuredClone(url);
 

@@ -1,26 +1,59 @@
 import Popup from "/modules/Popup.js";
 
-function fetchSport(value){
+async function fetchSport(DOM){
     
+    let popup = new Popup();
+    if(DOM.value == "all"){
+        await popup.init();
+    }
+    else {
+        await popup.init({id: DOM.value, name: DOM.options[DOM.selectedIndex].text});
+    }
+}
+
+function editScreen(DOM){
+    ControllerObj.isInPopup = true;
+    deleteScreen(DOM);
+    
+    let popup = new Popup(DOM);
+    popup.init();
+    popup.show();
+    
+}
+
+function deleteScreen(DOM){
+    DOM.remove();
+    ScreenObj.reArrange();
+}
+
+function mouseOver(DOM){
+    ControllerObj.updateFocus(DOM);
 }
 
 async function setScreen(sourceObj){
-    
-    window.controller.isInPopup = false;
+    ControllerObj.isInPopup = false;
     let streamPopup = document.getElementById("streamPopup");
     streamPopup.classList.remove("ontop");
-    streamPopup.innerHTML = "";
-    await window.screenObj.newScreen(sourceObj, parseInt(streamPopup.getAttribute("forScreen")));
+    await ScreenObj.newScreen(sourceObj);
 }
 
 async function newScreen(){
-    window.controller.isInPopup = true;
-    let popup = new Popup(window.screenObj.length);
+    ControllerObj.isInPopup = true;
+    let popup = new Popup(ScreenObj.length);
     popup.show();
     await popup.init();
 }
 
+setInterval(()=>{
+    if(document.activeElement.classList.contains("embed")){
+        ControllerObj.updateFocus(document.activeElement);
+    }
+}, 750);
 
 window.fetchSport = fetchSport;
 window.setScreen = setScreen;
 window.newScreen = newScreen;
+window.mouseOver = mouseOver;
+window.fetchSport = fetchSport;
+window.editScreen = editScreen;
+window.deleteScreen = deleteScreen;

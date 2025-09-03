@@ -1,10 +1,15 @@
+*:focus {
+    border: none;
+    outline: none;
+}
+
 body {
     padding: 0;
     margin: 0;
     position: relative;
     overflow: hidden;
-    
 }
+
 #container {
     margin: 0;
     padding: 0;
@@ -50,7 +55,6 @@ body {
 
 .embed {
     flex: 1;
-    min-width: 50%;
     height: 100%;
 }
 

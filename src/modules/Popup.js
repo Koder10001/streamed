@@ -3,64 +3,70 @@ import APIHandler from "./APIHandler.js";
 class Popup{
 
     #favorites = ["basketball","football","american-football","fight","tennis"]
-    #screenNo;
+    #replaceTarget;
 
     #popupDOM;
     #sportObj;
 
     #api = new APIHandler();
 
-    constructor(screenNo){
-        this.#screenNo = screenNo;
+    constructor(){
+
         // reset popup
         this.#popupDOM = document.getElementById("streamPopup");
-        this.#popupDOM.setAttribute("forScreen",screenNo);
+        this.#popupDOM.innerHTML = "";
         
     }
 
 
-    async init(){
+    async init(sportObj = undefined){
 
         this.#sportObj = await this.#api.getAllSport();
-
 
         let template = `
         <div tabindex="-1" class="selectRow">
 
-            <select tabindex="-1" id="sport" class="focusable" onchange="fetchSport(this.value)">
-                <option tabindex="-1" value="all">All Sport</option>
-                ${await this.listSportsType()}
+            <select tabindex="-1" id="sport" onclick="fetchSport(this)" onmousemove="mouseOver(this)" class="focused">
+                <option tabindex="-1" value="all" name="all">All Sport</option>
+                ${await this.listSportsType(sportObj)}
             </select>
 
         </div>
         <div tabindex="-1" id="sports">
-            ${await this.listSports()}
+            ${await this.listSports(sportObj)}
         </div>`
         this.#popupDOM.innerHTML = template;
     }
 
-    async listSportsType(){
+    async listSportsType(sportObj = undefined){
         let optionDOMs = "";
 
         for(let sport of this.#sportObj){
 
+            if(sportObj && sport.id == sportObj.id){
+                optionDOMs += `<option tabindex="-1" selected value="${sport.id}">${sport.name}</option>\n`;
+                continue
+            }
             optionDOMs += `<option tabindex="-1" value="${sport.id}">${sport.name}</option>\n`;
+            
 
         }
         return optionDOMs;
     }
 
-    async listSports(endpoint = undefined){
+    async listSports(sportObj = undefined){
         let matchList = "";
 
-        if(endpoint == undefined){
-            endpoint = this.#api.getSportSpecificMatches;
+        let target = this.#sportObj;
+
+        if(sportObj){
+            target = [sportObj];
         }
 
-        for(let sport of this.#sportObj){
+        for(let sport of target){
             if(this.#favorites.indexOf(sport.id) != -1){
 
-                let matches = await endpoint.bind(this.#api)(sport.id);
+                let matches = await this.#api.getSportSpecificMatches(sport.id);
 
                 let matchCard = "";
 
@@ -92,7 +98,7 @@ class Popup{
                         </div>`
 
                     matchCard += `
-                        <div tabindex="-1" class="match" class="focusable" onclick='setScreen(${JSON.stringify(match.sources)})'>
+                        <div tabindex="-1" class="match" onmousemove="mouseOver(this)" class="focusable" onclick='setScreen(${JSON.stringify(match.sources)})'>
                             ${banner}
                         </div>`
                     
@@ -120,6 +126,7 @@ class Popup{
 
     hide(){
         this.#popupDOM.classList.remove("ontop");
+        this.#popupDOM.innerHTML = "";
     }
 
 
